@@ -1,5 +1,5 @@
 # AWS Certified Cloud Practitioner
-## 0. resresource
+## 0. Resources
 - [Ultimate AWS Certified Cloud Practitioner CLF-C02 2025](https://www.udemy.com/course/aws-certified-cloud-practitioner-new/)
 ## 1. Cloud and Cloud Computing
 1. Cloud provider owns and maintains the hardware, while you provision exactly the type and size you need via a web application.
@@ -19,13 +19,13 @@
         - Pay-as-you-go pricing
 
 4. Six Advantages
-    1. Trade capita; expense (CAPEX) for operational expense (OPEX)
+    1. Trade capital expense (CAPEX) for operational expense (OPEX)
         - reduced Total Cost of Ownership (TCO)& Operational Expense (OPEX)
     2. Benefit from massive economies of scale
-    3. stop gussing capacity
+    3. stop guessing capacity
     4. increase speed and agility
     5. Stop spending money running and maintaining data centers
-    6. Go blobal in minutes
+    6. Go global in minutes
 
 5. Problems solved
     1. Flexibility
