@@ -73,3 +73,100 @@
 10. Shared Responsibility Model
     1. Customer: Responsibility for the security **IN** the cloud
     2. AWS:Responsibility for the security **OF** the cloud
+
+
+
+## 2. IAM
+1. Identity and Access Management
+    1. Root account: shouldn't be used or shared 
+    2. Users: can be grouped and be in multiple groups, but don't have to 
+    3. User Groups: only contain users, not other groups
+    4. Roles: Permissions for AWS services instead of Users
+
+2. Permissions
+    1. Assign JSON documents (policies) to User or Groups
+    2. Least privilege principle: don't give more permissions then a user needs
+    3. AWS has a lot of standard permission policies ready to go
+
+3. IAM Policies Structure
+```JSON
+{
+    "Version": "2012-10-17", // policy language version
+    "Id": "S3-Account-Permissions", //policy id (optional) 
+    "Statement": [
+        {
+            "Sid": "1", // statement id (optional)
+            "Effect": "Allow", // Allow, Deny
+            "Principal": { // this policy applied to
+                "AWS": ["arn:aws:iam::123456789012:root"]
+            },
+            // list of action this policy allows or denies
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject"
+            ], // * for everything
+            // list of resources to  witch the action applied to
+            "Resources": ["arn:aws:s3:::mybucket/*"] 
+            // * for everything
+            // "Condition" conditions for when this policy is in effect (optional)
+        }
+    ]
+
+}
+```
+
+4. IAM Password policy
+    1. password length, specific character, etc.
+    2. MFA (multi factor authentication)
+
+5. Access AWS
+    1. Management Console: password + MFA
+    2. Command Line Interface (CLI): access key
+        - Users manage their own access key
+            ```bash
+            aws configure
+            # enter Access Key ID
+            # enter Secret Access Key
+            # enter default region name
+            # enter default output format (optional)
+            ```
+
+        - You can also use CloudShell in Management Console
+            - You don't need to enter access key in CloudShell
+            - You can create, upload, and download files in CloudShell
+    3. Software Developer Kit (SDK): access key
+
+6. IAM Security tools
+    1. IAM Credentials Report (account level)
+        - lists all your account's users and their status
+    2. IAM Last Accessed (user level)
+        - shows the service permissions granted and have been used by a user
+
+7. IAM Best Practices
+    1. Don't use the root account except for account setup
+    2. One physical user = One AWS user
+    3. Assign users to groups
+    4. Use strong password policy and MFA
+    5. Create Roles for giving permission to AWS services
+    6. Use Credentials Report and Last Accessed
+
+8. Shared Responsibility Model for IAM
+    1. YOU:
+        1. Users, Roles, Policies management and monitoring
+        2. Enable MFA
+        3. Rotate all your keys often
+        4. Apply appropriate permission
+        5. Analyze access patterns and review permissions
+    2. AWS:
+        1. Infrastructure
+
+3. IAM workflow cheat sheet
+    1. Users > Create user > Set permissions (Add user to a groups)
+    2. Users need account ID or account alias to log in
+    3. Users > choose a user to edit permissions/groups
+    4. Policies > Create policy > Visual/JSON
+    5. Account Settings > Edit password policy
+    6. Users > choose a user > security credentials > Access key
+    7. Roles > create role > AWS service
+    8. Credentials report
+    9. Users > choose a user > Last Accessed
