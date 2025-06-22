@@ -76,8 +76,8 @@
 
 
 
-## 2. IAM
-1. Identity and Access Management
+## 2. Identity and Access Management (IAM)
+1. IAM
     1. Root account: shouldn't be used or shared 
     2. Users: can be grouped and be in multiple groups, but don't have to 
     3. User Groups: only contain users, not other groups
@@ -170,3 +170,164 @@
     7. Roles > create role > AWS service
     8. Credentials report
     9. Users > choose a user > Last Accessed
+
+
+## 3. Elastic Computer Cloud (EC2)
+1. Budget setup
+    1. Billing info is Root account access only
+    2. Enable IAM users access
+        1. Root account > Account (Top-right menu)
+        2. IAM user and role access to Billing information
+    3. Billing and Cost Management (Top-right menu) > Budgets
+
+2. EC2
+    1. It's Infrastructure as a service
+    2. Renting virtual machines (EC2)
+    3. Storing data on virtual drives (EBS)
+    4. Distributing load across machines (ELB)
+    5. Scaling the services using an auto-scaling group (ASG)
+
+3. EC2 configuration option
+    1. OS
+    2. RAM
+    3. CPU
+    4. Storage
+        1. Network-attaches (EBS and EFS)
+        2. Hardware (EC2 instance Store)
+    5. Network card
+    6. Firewall rules
+    7. Bootstrap script (EC2 User Data): Script that only run once at the first start
+
+4. Hands-On: launching an EC2 Instance
+    1. Launching a instance using the AWS Console
+        1. EC2 > Instances > Launch instances
+        2. Name, Images, Instance type
+        3. Key pair: for connect to the instance
+        4. Network settings > Firewall > Allow SSH, HTTP
+        5. Configure storage > Advance > Delete on termination
+        6. Advanced details > User data
+        7. Launch instance
+    2. Access instance via public IPv4 address
+        1. when reboot a instance, public IPv4 may change
+
+5. [Amazon EC2 Instance Types](https://aws.amazon.com/ec2/instance-types/)
+    1. Naming convention
+        1. `m5.2xlarge`
+        2. `m`: instance class
+        3. `5`: generation
+        4. `2xlarge`: size within the instance class (CPU, RAM, etc.)
+    2. 
+
+6. EC2 Security Groups
+    1. Acting as a firewall on EC2 instances
+    2. Security Groups only contain **allow** rules
+    3. Security Groups regulate
+        1. Access to Ports
+        2. Authorized IP ranges
+        3. Control of inbound network
+        4. Control of outbound network
+    4. It locked down to a region/VPC combination
+    5. It's good to maintain one separate Security Group for SSH access
+    6. By default
+        1. All inbound is blocked
+        2. All outbound is authorized
+    7. Referencing other Security Groups in a Security Group
+        1. This allow other instances to access the instance
+        2. If
+            1. Security Group 1 inbound authorizing Security Group 2
+            2. Instances with Security Group 2 can send request to all instances with Security Group 1
+
+7. Hands-On: EC2 Security Groups
+    1. EC2 > Security Groups > Select a Security Group
+    2. 0.0.0.0/0 mean any IP is allow
+
+8. Classic Ports
+    1. 22 SSH: log into a Linux instance
+    2. 21 FTP: upload file to a file share
+    3. 22 SFTP: upload file using SSH
+    4. 80 HTTP
+    5. 443 HTTPS
+    6. 3389 RDP: log into a Windows instance
+
+10. connect to an EC2 instance via SSH
+    1. default instance user name: `ec2-user`
+    2. Linux/Mac
+    ```bash
+    chmod 0400 [YourSSHKey].pem # change .pem file permission
+    ssh -i [YourSSHKey].pem ec2-user@[InstancePublicIP]
+    exit
+    ```
+    3. Windows
+        1. PuTTY
+            1. need .ppk file to work
+            2. use PuTTYgen to generate .ppk file from .pem file
+            3. PuTTY > enter Host Name `ec2-user@[InstancePublicIP]`
+            4. Save as New Session
+            5. Connection > SSH > Auth > Private key file...
+            6. open .ppk file 
+            7. Save the Session just create
+            8. Open Session
+
+        2. Windows 10 and up have ssh command
+            1. change .pem file permission in file Properties
+                1. Security > Advanced > Disable inheritance
+                2. Add > Select a principal
+                3. Full control
+            2. Cmd or PowerShell
+            ```bat
+            ssh -i ./[YourSSHKey].pem ec2-user@[InstancePublicIP]
+            exit
+            ```
+    4. EC2 instance connect
+        1. AWS EC2 page > select a instance > Connect
+
+11. EC2 IAM Role
+    1. AWS EC2 page > select a instance > Actions > Security > Modify IAM role
+    2. then the instance can use `aws` command to access the AWS
+
+12. EC2 Purchasing Options
+    1. On-Demand Instance
+        1. Linux or windows: billing per second
+        2. other OS: billing per hour
+        3. for short-term and un-interrupted workload
+    2. Reserved (1 and 3 years)
+        1. Reserved Instances
+            1. up to around 70% discount compared to On-demand
+            2. reserve a specific instance attribute, period, region or zone
+            3. Pay: No upfront, Partial upfront, all Upfront
+            4. for steady-state usage
+            5. can trade in the Reserved Instances Marketplace
+        2. Convertible Reserved Instances: 
+            1. around 70% discount compared to On-demand
+            2. more flexible: can change instance type, OS, etc.
+    3. Saving Plans (1 and 3 years): 
+        1. discount same as Reserved Instances
+        2. commitment to an amount of usage (e.g. $10/hour for 3 years)
+        3. locked to a specific instance family and region
+    4. Spot Instance:
+        1. for short workloads (distributed workloads, batch jobs)
+        2. up to around 90% discount, less reliable
+        3. if your max price is less then the current spot price, you can **lose** a instance
+    5. Dedicated Hosts: 
+        1. book an entire physical server, control instance placement
+        2. for address compliance requirements and use a existing server-bound software licenses
+        3. can be On-Demand or Reserved
+        4. the most expensive option
+    6. Dedicated Instance:
+        1. instance run on hardware that's dedicated to you
+        2. but no control over instance placement
+    7. Capacity Reservations:
+        1. reserve On-Demand capacity in a specific AZ fot any duration
+        2. no time commitment and discounts (On-Demand price)
+        3. charge whether you run instances or not
+        4. for short-term workloads that need to be in a specific AZ
+
+13. Shared Responsibility Model for IAM
+    1. YOU:
+        1. Security Groups rules
+        2. OS patches and updates
+        3. Software and utilities installed 
+        4. IAM Roles assigned to EC2
+        5. Data security
+    2. AWS:
+        1. Infrastructure
