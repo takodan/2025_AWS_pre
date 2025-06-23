@@ -200,7 +200,7 @@
 
 4. Hands-On: launching an EC2 Instance
     1. Launching a instance using the AWS Console
-        1. EC2 > Instances > Launch instances
+        1. `EC2` > `Instances` > `Launch instances`
         2. Name, Images, Instance type
         3. Key pair: for connect to the instance
         4. Network settings > Firewall > Allow SSH, HTTP
@@ -238,7 +238,7 @@
             2. Instances with Security Group 2 can send request to all instances with Security Group 1
 
 7. Hands-On: EC2 Security Groups
-    1. EC2 > Security Groups > Select a Security Group
+    1. `EC2` > `Security Groups` > select a Security Group
     2. 0.0.0.0/0 mean any IP is allow
 
 8. Classic Ports
@@ -279,10 +279,10 @@
             exit
             ```
     4. EC2 instance connect
-        1. AWS EC2 page > select a instance > Connect
+        1. AWS EC2 page > select an instance > Connect
 
 11. EC2 IAM Role
-    1. AWS EC2 page > select a instance > Actions > Security > Modify IAM role
+    1. AWS `EC2` page > select an instance > `Actions` > `Security` > `Modify IAM role`
     2. then the instance can use `aws` command to access the AWS
 
 12. EC2 Purchasing Options
@@ -307,7 +307,7 @@
     4. Spot Instance:
         1. for short workloads (distributed workloads, batch jobs)
         2. up to around 90% discount, less reliable
-        3. if your max price is less then the current spot price, you can **lose** a instance
+        3. if your max price is less then the current spot price, you can **lose** an instance
     5. Dedicated Hosts: 
         1. book an entire physical server, control instance placement
         2. for address compliance requirements and use a existing server-bound software licenses
@@ -331,3 +331,88 @@
         5. Data security
     2. AWS:
         1. Infrastructure
+
+14. Elastic Block Store (EBS) Volume
+    1. It's a net work drive you can attach to an instance
+        - might have latency
+        - can be detached then attached to another instance
+    2. It's for an instance to persist data after they been terminated
+    3. One EBS can only be mounted to one EC2 instance
+        - One instance can have multiple EBS
+        - Associate level certificate: some EBS have multi-attach feature
+    4. It bound to a specific AZ (EC2 and EBS have to be in the same AZ)
+        - You need to snapshot an EBS to move it across AZ
+    5. Have a provisioned capacity (GBs and IOPS)
+    6. When an instance , by default
+        - root EBS volume will be deleted
+        - any other EBS volume will not be deleted
+        - controls the behavior by the `Delete on Termination` attribute
+        - change a default attribute when launching an instance
+    7. Hands-On: EBS
+        1. `EC2` > `Instances` > select an instance > storage: to manage an instance's EBS
+        2. `EC2` > `Volume`: to create, attach, snapshot an EBS
+        3. Make sure the EC2 and the EBS are in the same AZ
+
+15. EBS Snapshot (backup)
+    1. Can be made at any time and copy across AZ or Regions
+    2. Not necessary to detach volume to do snapshot, but recommended
+    3. EBS Snapshot Archive
+        1. move a snapshot to an archive tier
+        2. It's cheaper but take 24 to 72 hours for restoring
+    4. Recycle Bin for EBS Snapshot
+        1. Setup rules to retain deleted snapshots
+        2. retain 1 day to 1 year
+    5. manage snapshot at `EC2` > `Snapshots`
+        1. right click a snapshot > `Copy snapshot`: can copy to another AZ or Region
+        2. `Action` > `Create Volume from snapshot`: also can create to another AZ or Region
+    6. Recycle Bin is a stand-alone service in AWS
+
+16. Amazon Machine Image (AMI)
+    1. Using customized EC2 instance to create an  customized AMI
+    2. Public AMI: AWS provided
+    3. AWS Marketplace AMI: AMI made by someone else
+    4. Hands-On: AMI
+        1. `EC2` > right click an instance > `Image and templates` >`Create image`
+    5. EC2 Image builder
+        1. Automate the creation of VM or image
+        2. workflow: EC2 Image builder > create Builder EC2 Instance > create AMI and teat EC2 instance
+        3. Can be run on a schedule
+        4. Free (only pay for the instance and AMI)
+
+17. EC2 Instance Store
+    1. Some instance types have Instance Store
+    2. They have better I/O performance, but they are ephemeral storage (lose when it stop)
+    3. Good for buffer/ cache/ scratch data/ temporary content
+    4. Risk of data loss if hardware fails
+
+18. Elastic File System (EFS)
+    1. Managed NFS for EC2
+    2. Can be attach to 100s of EC2
+    3. Works with Linux EC2 in multi AZ
+    4. Highly available, scalable
+    5. Expensive, pay per use, no capacity planning
+    6. When setup an EFS, you can choose `Transition into Infrequent Access (IA)` value
+        1. Up to around 90% lower cost when store in IA
+        2. e.g. 
+            1. value = 60 days
+            2. files haven't been use for 60 days will automatically move to IA
+
+19. Amazon FSx
+    1. FSx for Windows File Server
+        1. Windows native shared file system
+        2. for windows instance, supports SMB protocol and Windows NTFS
+        3. Can be accessed outside fo AWS over SMB
+    2. FSx for Lustre
+        1. It's a type of parallel distributed file system.
+        2. for large-scale cluster computing (ML, Analytics, etc.) on Linux
+        3. Lustre = Linux + cluster
+        4. Can be accessed outside fo AWS
+
+20. Shared Responsibility Model for EC2
+    1. YOU:
+        1. Setting up snapshot/backup procedures
+        2. Setting up data encryption
+        3. The risk of using EC2 Instance Store
+    2. AWS:
+        1. Infrastructure
+        2. Replication for data
