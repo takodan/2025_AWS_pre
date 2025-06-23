@@ -79,7 +79,7 @@
 ## 2. Identity and Access Management (IAM)
 1. IAM
     1. Root account: shouldn't be used or shared 
-    2. Users: can be grouped and be in multiple groups, but don't have to 
+    2. Users: can be grouped and be in multiple groups but you don't have to 
     3. User Groups: only contain users, not other groups
     4. Roles: Permissions for AWS services instead of Users
 
@@ -416,3 +416,83 @@
     2. AWS:
         1. Infrastructure
         2. Replication for data
+
+
+## 4. Elastic Load Balancer and Auto Scaling Group
+1. Term definition
+    1. Scalability
+        1. Vertical Scalability
+            1. increase the size of the instance (same amount)
+            2. common for non distributed system (e.g. database)
+        2. Horizontal Scalability
+            1. increase the number of instances
+            2. for distributed system (e.g. web app)
+            3. in EC2 you can use Auto Scaling Group and Load Balancer to achieve this
+        3. A system can Auto-Scale also means it has Elasticity
+        4. A system can scale fast and easily also means it has Agility
+    2. Availability
+        1. remain accessible to its users even when individual components fail
+        2. in AWS means running system in at least 2 AZ
+        3. Auto Scaling Group and Load Balancer can also achieve this
+2. Elastic Load Balancer (ELB)
+    1. Load balancing
+        1. Servers that forward internet traffic to multiple server
+        2. It spread load, do regular health check, and handle failure for instances
+        3. Expense only single point of access
+        4. Provide SSL termination (HTTPS)
+    2. ELB
+        1. Load balancer managed by AWS
+        2. AWS take care of maintenance and availability
+        3. It cost more compared to setup your own load balancer
+    3. Kinds of load balancers offered by AWS
+        1. Application (HTTP/HTTPS/gRPC)
+            1. L7
+            2. HTTP routing feature
+            3. Static DNS (URL)
+        2. Network (TCP/UTP)
+            1. L4
+            2. high performance
+            3. Static IP through Elastic IP
+        3. Gateway (GENEVE)
+            1. L3
+            2. Route traffic to third-party virtual appliances for analyze traffic first
+            3. Send traffic to server after appliances say it's save
+        4. Hands-On: ELB
+            1. You can launch multiple instances at the same time when launch instances
+            2. `EC2` > `Load balancers` > `Create load balancers`
+            3. Application Load Balancer
+                1. Listeners and routing > Forward to a target group
+                2. `Create target group` > register instances to group
+                3. Or manage target group in `EC2` > `Target groups`
+
+
+3. Auto Scaling Group (ASG)
+    1. It can scale out (add) or in (remove) EC2 instance automatically to match load
+    2. It can replace unhealthy instances
+    3. Automatically register new instance to a load balancer
+    4. Hands-On: AGS
+        1. `EC2` > `Launch Templates` > `Create launch template`
+        2. Create a launch template is very similar to create an instance
+        3. `EC2` > `Auto Scaling groups` > `Create Auto Scaling group`
+            1. Choose launch template
+            2. Choose instance launch options
+                1. choose AZ
+            3. Integrate with other services
+                1. Attach to an existing load balancer
+                2. Turn on Health checks
+            4. Configure group size and scaling
+                1. Desired capacity
+                2. Min desired capacity
+                3. Max desired capacity
+    5. AGS Scaling strategies
+        1. Manual update the size
+        2. Dynamic scaling
+            1. Simple/Step scaling
+                1. when a CloudWatch alarm is triggered (e.g. CPU > 70) add instances
+            2. Target Tracking scaling
+                1. e.g. set the average CPU at 40%
+            3. Scheduled Scaling
+                2. set min capacity to 10 on Fridays
+        3. Predicative Scaling
+            1. Uses ML to predict future traffic
+    6. Delete ASG will also terminate instances create by ASG
