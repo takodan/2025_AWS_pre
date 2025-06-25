@@ -141,6 +141,7 @@
         - lists all your account's users and their status
     2. IAM Last Accessed (user level)
         - shows the service permissions granted and have been used by a user
+    3. IAM Access Analyzer
 
 7. IAM Best Practices
     1. Don't use the root account except for account setup
@@ -496,3 +497,143 @@
         3. Predicative Scaling
             1. Uses ML to predict future traffic
     6. Delete ASG will also terminate instances create by ASG
+
+
+## 5. Simple Storage Service (S3)
+1. S3 usa case
+    1. back up and storage
+    2. Application, Media hosting
+    3. Data lake
+    4. Software delivery
+2. S3 Bucket
+    1. store `Objects` (files) in `Bucket` (directories)
+    2. Buckets must have **globally unique name** (across all regions)
+    3. Buckets are defined at the **region level**
+3. S3 Objects
+    1. `Objects` have a key (FULL path)
+    2. e.g. `s3://my-bucket/my_folder/my_file.txt`
+        1. `my-bucket`: Bucket name
+        2. `my_folder/my_file.txt`: Key
+        3. `my_folder`: prefix
+        4. `my_file.txt`: object name
+    3. Object values are the content
+        1. 5TB Max per Object
+        2. 5GB per upload, use `multi-part upload`
+    4. Metadata: list of text key/ value pairs
+    5. Tags: unicode kry / value pair
+    6. Version ID
+
+4. S3 Security
+    1. IAM based
+        1. IAM Users/ User groups
+        2. IAM Roles (for other AWS services)
+    2. Bucket based
+        1. Bucket Policies
+            1. looks identical to IAM policies but its for bucket
+            2. [see 2. Identity and Access Management (IAM)](#2-identity-and-access-management-iam)
+            3. It can
+                1. grant public access
+                2. force objects to be encrypted at upload
+                3. grant access to another account
+        2. Object Access Control List
+        3. Bucket Access Control List
+        4. Bucket settings for Block Public Access
+            1. You can block public access at Bucket settings
+            2. This will prohibit public access even Bucket Policies say so.
+    3. Encryption
+        1. Server-Side Encryption (Default)
+        2. Client-Side Encryption: Encrypt file before upload
+
+5. S3 Versioning
+    1. After Enable Bucket Versioning, delete or same  key overwrite will only create versions
+    2. Delete a version to roll back
+
+6. S3 Replication
+    1. Can be in different AWS account
+    2. Copy is asynchronous
+    3. Must have proper IAM permission to S3
+    4. Same-Region Replication
+        1. for copy between production and test account
+        2. for log aggregation
+    5. Cross-Region Replication
+        1. for compliance遵守
+        2. for lower latency
+
+7. S3 Storage classes
+    1. Durability is 11 9's for all classes
+    2. Availability depending on classes
+    3. S3 Standard classes
+        1. General Purpose
+            1. 99.99% Availability
+            2. Low latency and high throughput
+            3. for Big Data, applications, content distribution, etc.
+        2. Infrequent Access
+            1. 99.9% Availability
+            2. Lower cost
+            3. for less frequently accessed, but can rapid access when needed
+            4. for backups
+    4. S3 One Zone Infrequent Access
+        1. 99.5% Availability and store in a single AZ
+        2. for secondary backup
+    5. S3 Glacier classes
+        1. low-cost storage fo archiving / backup
+        2. pricing = storage cost + retrieval cost
+        3. Instant Retrieval
+            1. Millisecond retrieval time
+            2. Minimum storage duration 90 days
+        4. Flexible Retrieval
+            1. Expedited (5 mins), Standard (5 hours), Bulk (12 hours) retrieval time
+            2. Minimum storage duration 90 days
+        5. Deep Archive
+            1. Stander (12hours), Bulk (48 hours)
+            2. Minimum storage duration 180 days
+    6. S3 Intelligent Tiering
+        1. pricing = storage cost + monthly monitoring + auto tiering
+        2. Moves object automatically between tiers
+            1. Frequent Access
+            2. Infrequent Access: not accessed for 30 days
+            3. Archive Instant Access: not accessed for 90 days
+            4. Archive Access (Optional): 90 to 700+ days
+            5. Deep Archive Access (Optional): 180 to 700+ days
+    7. Storage classes is defined on each object.
+    8. Lifecycle rules: custom rules to transition or delete objects
+
+
+8. Hands-On: S3 
+    1. Public access
+        1. `S3` > select a bucket > `Permissions` 
+        2. unblock public access settings
+        3. `Bucket policy` > `Edit` > `AWS Policy Generator`
+            1. Type of Policy > S3 Bucket Policy
+    2. Static website hosting
+        1. `S3` > select a bucket > `Properties` > `Static website hosting`
+    3. Versioning
+        1. `S3` > select a bucket > `Properties` > `Bucket Versioning`
+        2. to permanently delete an object: select a bucket > `Objects` > turn on `Show version` > delete an object
+    4. Replication
+        1. `S3` > select a bucket > `Management` > Replication rules
+    5. Storage classes
+        1. Upload new objects: `S3` > select a bucket > `Upload` > `Properties`
+        2. Existing objects: `S3` > select a bucket > select an object > `Properties` >  `Storage class`
+    6. Create Lifecycle rules
+        1. `S3` > select a bucket > `Management` > `Lifecycle configuration`
+
+9. Shared Responsibility Model for EC2
+    1. YOU:
+        1. Versioning
+        2. Bucket Policies
+        3. Replication setup
+        4. logging and monitoring
+        5. Data encryption outside a Bucket
+    2. AWS:
+        1. Infrastructure
+
+10. AWS Snowball
+    1. A physical device for transferring a large amount of data. (Storage Optimized)
+    2. It can also preprocess data at a edge. (Compute Optimized)
+    3. pricing = device usage (days) + data transfer out of AWS
+
+11. AWS Storage Gateway
+    1. Bridge between on-premise本地端 data and AWS cloud
+    2. for recovery, backup, etc.
+
