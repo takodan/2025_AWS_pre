@@ -637,3 +637,189 @@
     1. Bridge between on-premise本地端 data and AWS cloud
     2. for recovery, backup, etc.
 
+## 6. Database and Analytics
+1. Introduction
+    1. Relational (SQL) Database
+    2. Non Relational (NoSQL) Database
+2. Amazon Relational Database Service (RDS)
+    1. compare to deploying DB on EC2
+        1. Automated provisioning and OS patching
+        2. Easy backup and restore
+        3. Monitoring
+        4. Read replicas for improved performance
+        5. Scalability
+        6. Multi AZ
+    2. You can not SSH into the RDS instance
+    3. Amazon Aurora
+        1. SQL optimized for cloud by AWS
+        2. Compatible with MySQL or PostgreSQL
+        3. Automatically scale up tp 128TB
+        4. cost more, better performance
+        5. Aurora DSQL: Serverless database
+    4. Deployment option
+        1. Read Replicas
+            1. scale the read workload
+            2. up to 15 replicas
+            3. read from all replicas, write to main DB
+        2. Multi-AZ
+            1. increase availability
+            2. it create a replica in different AZ
+            3. can only have one other AZ replica
+            4. only read and write to main DB
+        3. Multi-Region
+            1. for disaster recovery and reduce latency
+            2. different regions read from different replicas, write to main DB
+3. ElastiCache
+    1. **in-memory** database, structure is similar to RDS
+    2. reduce load off databases for read intensive workloads
+
+4. DynamoDB
+    1. NoSQL database
+    2. It's distributed serverless database can scales to massive workload
+    3. single-digit millisecond, low latency retrieval
+    4. It's **key/value database**
+        1. Primary Key: Partition Key + Sort Key (optional)
+        2. Attributes
+    2. DynamoDB Accelerator (DAX): in-memory DynamoDB
+    3. Global Table
+        1. make a DynamoDB table with low latency in multiple regions.
+        2. it 2-way replication
+        3. different regions read and write to different DB
+
+5. Redshift
+    1. **Data warehouses**
+    2. based on PostgreSQL for online analytical processing (OLAP)
+    3. Columnar storage
+    4. have Massively Parallel Query Execution (MPP)
+    5. integrate with BI tools such as AWS Quicksight ro Tableau
+    6. Redshift Serverless
+
+6. Other databases related servers in AWS
+    1. Elastic MapReduce (EMR)
+        1. helps create **Hadoop clusters** for Big Data
+    2. Athena
+        1. **Serverless** SQL service to perform analytic against **S3** object
+        2. for BI, analyze logs
+    3. Quicksight
+        1. **Serverless** ML BI service to create interactive dashboards
+        2. Integrate with lots of AWS databases
+    4. DocumentDB
+        1. NoSQL optimized for cloud by AWS
+        2. Compatible with **mongoDB**
+    5. Neptune
+        1. **graph database**
+        2. for knowledge graphs, social networking
+    6. Timestream
+        1. serverless **time series database**
+    7. Managed Blockchain
+        1. Compatible with Hyperledger Fabric and Ethereum
+    8. AWS Glue
+        1. serverless extract, transform, and load (ETL) service
+    9. Database Migration Service (DMS)
+        1. for database migration
+            1. Homogeneous migration: to the same database structure (e.g. Oracle to Oracle)
+            2. Heterogeneous: to the different database structure (e.g. Oracle to Aurora)
+
+## 7. Other Compute services
+1. Container services
+    1. Elastic Container Service (ECS)
+        1. for Docker on AWS
+        2. You have to create EC2 first to let AWS manage and load balance container
+    2. Fargate
+        1. for Docker on AWS
+        2. You not have to provision teh infrastructure (Serverless)
+    3. Elastic Container Registry (ECR)
+        1. Private Docker registry on AWS
+    4. Elastic Kubernetes Service
+        1. for Kubernetes on AWS
+        2. Kubernetes can manage, deploy, and scaling Docker
+        3. works on EC2 instance and Fargate
+        4. Kubernetes is cloud-agnostic跨雲端的
+2. Serverless services
+    1. It starts form Function as a Service
+    2. Now include anything that is managed
+    3. e.g. S3, DynamoDB, Fargate, Lambda, etc.
+    4. AWS Lambda
+        1. no servers to manage (Serverless)
+        2. for short execution
+        3. run on-demand and event-Driven: invoke when needed
+        4. automate scaling (CPU, RAM, Network, etc.)
+        5. pricing: pay per request and compute time
+        6. easy monitoring
+    2. Amazon API Gateway
+        1. for building a serverless API
+3. AWS Batch
+    1. for batch processing at any scale
+    2. It will provision the right amount of EC2 instances or Spot instances (not serverless!)
+    3. defined as Docker images (any runtime) and run on ECS
+
+4. Amazon Lightsail
+    1. for people with little cloud experience to use common cloud services
+    2. limited integration with AWS
+
+## 8. Deployment and Managing infrastructure
+1. CloudFormation
+    1. for outlining AWS infrastructure (most of services are support)
+    2. Benefits
+        1. infrastructure are controlled by code
+        2. easy to estimate the costs and plan a saving strategy
+        3. can be reconfigured on the fly
+        4. automated generation of Diagram
+        5. declarative programming
+        6. leverage existing templates or documentation
+    3. `CloudFormation` > `Application Composer`: to see the diagram
+2. AWS Cloud Development Kit (CDK)
+    1. Deploy infrastructure and application runtime code together
+    2. The code is compiled into CloudFormation
+3. AWS Elastic Beanstalk
+    1. Platform as Service for developer
+    2. It gathers common AWS infrastructure service in one view
+    3. It managed instance, load balancing, auto-scaling, etc.
+    4. It use CloudFormation in the background
+    5. Hands-On
+        1. `Elastic Beanstalk` > `Environments` > Create environment
+            1. Configure environment
+            2. Configure service access
+                1. Create New Service IAM role
+                2. Create New EC2 instance IAM role
+                    1. ElasticBeanstalkMulticontainerDocker
+                    2. ElasticBeanstalkWebTier
+                    3. ElasticBeanstalkWorkerTier
+4. AWS Systems Manager
+    1. for manage EC2 and On-Premises system (Hybrid)
+    2. important features
+        1. patching automation
+        2. run commands across servers
+        3. store parameter configuration
+    3. SSM Session Manager
+        1. for start a secure shell on EC2 and On-Premises servers
+        2. No SSH, bastion host, port 22 needed
+        3. Can send session log to S3 or CloudWatch Logs
+        4. use IAM role to allow Session Manager access EC2 (SSMManagedInstanceCore)
+    4. SSM Parameter Store
+        1. secure storage for configuration and secrets
+        2. serverless
+
+5. Developer services
+    1. AWS CodeDeploy
+        1. for automatic application deploy
+        2. It can work with EC2 and on-premises servers (Hybrid)
+    2. AWS CodeCommit
+        1. code repository like GitHub
+        2. already deprecate
+    3. AWS CodeBuild
+        1. compiles code, run test, and produces package
+        2. serverless
+    4. AWS CodePipeline
+        1. for CI/CD
+        2. Orchestrate the steps to automatically push code to production
+        3. Compatible with AWS and 3re-party service (e.g. GitHub)
+    5. AWS CodeArtifact
+        1. artifact management service
+        2. for storing and retrieving dependencies
+
+
+
+
+
+
