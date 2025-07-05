@@ -49,10 +49,61 @@
         1. AWS: Responsibility for the security of hte cloud
         2. User: Responsibility for the security in the cloud
 
+## Artificial Intelligence and Machine Learning
+1. Artificial Intelligence > Machine Learning > Deep Learning > Generative AI
+2. AI components
+    1. Data Layer
+    2. ML Framework and Algorithm Layer
+    3. Model Layer
+    4. Application Layer
+3. Machine Learning 
+    1. Make predictions based on data
+    2. Training Data
+        1. Garbage in, Garbage out
+        2. Labeled Data vs Unlabeled Data
+        3. Structured Data vs Unstructured Data (e.g. text and image)
+    3. Machine Learning types
+        1. Supervised Learning
+            1. Training, Validation, Test
+                1. used Labeled Data
+                2. 60~80% of the dataset for Training, 10~20% for Validation, 10~20% for Test
+            2. Feature Engineering
+                1. select and transform raw data into meaningful features for training
+                2. Extraction/Creation, Selection, Transformation
+            3. possible tasks:
+                1. Regression: used to predict a numeric value
+                2. Classification: used to predict the categorical label
+                    1. Binary: 0, 1
+                    2. Multi-class: more then two class
+                    3. Multi-label: one object can have multiple class
+        2. Unsupervised Learning
+            1. use Unlabeled Data
+            2. possible tasks:
+                1. Clustering: Used to group similar data together
+                2. Association rule learning
+                3. Anomaly Detection
+        3. Semi-supervised Learning
+            1. used small amount of labeled data to train the model
+            2. used the model to label Unlabeled Data (pseudo-labeling)
+            3. re-train the model on the mix data
+        4. Self-Supervised Learning
+            1. create Pretext Task (used part of dataset to predict another part) to create Pseudo-Label data
+            2. train the model on these Pseudo-Label data to create a Representation of the dataset
+            3. used small amount of labeled data to Fine-tune the model
+            4. now the model can perform the Downstream Task
+    
+
+4. Deep Learning
+    1. Uses the brain like structure to create Neural Networks to process patterns in the data
+    2. Input Layer > Hidden Layers > Output Layers
+5. Generative AI
+    1. Subset of Deep Learning
+    2. Focus on generating data
+
 ## GenAI and Amazon Bedrock
 1. Generative AI
     1. GenAI generate new data that is similar to the data it was trained on
-    2. Data >(train) Foundation Model (generate)> new Data
+    2. Unlabeled Data >(train) Foundation Model (generate)> new Data
     3. Large Language Models: Foundation Models focus on generate coherent連貫的 human-like text
     4. Non-deterministic: the generated text may be different even with same prompt
     5. Diffusion Model
@@ -64,12 +115,13 @@
         3. Embeddings: create vectors out of text, images, audio, etc.
             1. vector have a high dimensionality to capture many features for input
 
-2. Bedrock is a PaaS
+2. Amazon Bedrock 
+    1. Amazon Bedrock is a PaaS
     1. Fully-managed by Amazon
     2. Unified API
     3. Out-of-the box feature: Fine-tuning, RAG, Agent, etc.
     4. Security, Privacy, Governance and Responsible feature
-3. Bedrock Hands-On
+3. Amazon Bedrock Hands-On
     1. `Configure` > `Model access`:select and request access means agree to Terms
     2. `Test`: 
         1. to access AI models through a web browser
@@ -78,7 +130,7 @@
     1. Model types, capability, performance, context windows
     2. Level of customization, licensing agreement
     3. Price
-5. Custom models
+5. Amazon Bedrock Custom models
     1. `Tune` > `Custom models`: Distillation蒸餾, Fine-tuning, Continued pre-training
     2. Fine-Tuning
         1. Fine-Tuning will change the weight of the base foundation model
@@ -104,7 +156,7 @@
     3. Continued Pre-Training
         1. It uses unlabeled data to make a model expert in a specific domain
 
-6. Evaluating a Module
+6. Amazon Bedrock Evaluating a Module
     1. `Assess` > `Evaluation`
     2. Question > Compare Benchmark answers and Generate answer > Evaluating by human, metrics or models
     3. Automated Metrics
@@ -127,7 +179,7 @@
         4. Conversion Rate 轉換率
         5. Efficiency
         
-7. Knowledge bases
+7. Amazon Bedrock Knowledge bases
     1. `Build` > `Knowledge bases`
     2. It is used for Retrieval Augmented Generation (RAG)
     3. Data Sources (split)> Document Chunks > Embedding Model (save)> Vector Database
@@ -142,14 +194,14 @@
         2. Legal Research
         3. Healthcare
 
-8. GuardRails
+8. Amazon Bedrock GuardRails
     1. `Build` > `GuardRails`
     2. It's mainly used for filter undesirable and harmful content
     3. It can also
         1. remove Personally Identifiable Information (PII)
         2. Reduce hallucination
 
-9. Agents
+9. Amazon Bedrock Agents
     1. `Build` > `Agents`
     2. Agents workflow
         1. Task (send)> Agent (Models) >(gather) data (send)> Models > Chain of Thought
@@ -157,7 +209,7 @@
         3. Result (send)> Agent (Models) (send task+result)> Models > Final Response
     4. Action Group: API Call or Function
 
-10. Bedrock with AWS CloudWatch
+10. Amazon Bedrock with AWS CloudWatch
     1. `Configure` > `Settings` > Model Invocation Logging
     2. send invocation log to S3 and CloudWatch Log
     3. Use CloudWatch Metric to get more detail info
@@ -177,4 +229,58 @@
         2. RAG
         3. Fine-tuning
         4. Continued Pre-Training
-        
+
+## Prompt Engineering
+1. optimizing prompt to enhance the output of models
+2. Prompting element
+    1. Instructions: a task for the model
+    2. Context: external information to guide the model
+    3. Input data: the input for which you want a response
+    4. Output Indicator: the output type or format
+3. Negative Prompting
+    1. explicitly instruct what not to include
+    2. helps to
+        1. Avoid unwanted content
+        2. Maintain focus
+        3. Enhance Clarity
+    3. add into Instructions or Output Indicator
+4. Prompt Engineering Techniques
+    1. Zero-Shot:without providing any example, fully rely on the model
+    2. Few-Shot: provide example to the model to guide its output
+    3. Chain of Thought: divide the task in to a sequence of steps
+5. Model Configurations
+    1. System Prompts: how the model should behave and reply
+    2. Temperature: creativity of the model
+        - lower means more conservative, higher means more creative
+    3. Top P: limit the probable words by the possibility cap
+        - e.g. 0.25 means consider the 25% most likely words
+    4. Top K: limit the the number of probable words 
+    5. Response length: maximum output length
+    6. Stop Sequences: tokens that signal the model to stop
+    7. The **output latency** is **not impacted** by Temperature, Top T, and Top K
+
+
+## Amazon Q
+1. Amazon Q are SaaS
+2. Amazon Q Business
+    1. GenAI assistant for employees managed by Amazon
+    2. DataConnectors: RAG
+    3. Plugins: allows Q Business to interact with 3rd party services
+    4. Admin Controls: filter content (like Bedrock GuardRails)
+    5. authenticate users through IAM identity center
+    6. Q Apps: vibe coding service
+3. Amazon Q Developer
+    1. GenAI assistant for AWS developer
+    2. Usage
+        1. Answer questing about the AWS and your AWS account
+        2. Answer questing about resource in your AWS
+        3. Suggest CLI fro AWS
+        4. Code companion
+        5. Can be integrated with IDE
+4. Amazon Q for other AWS services
+    1. for Quicksight: visualize data
+    2. for EC2: provides guidance and suggestions fot EC2 instance types
+    3. for AWS Chatbot: access Amazon Q directly through AWS Chatbot
+    4. for Glue: data integration
+3. PartyRock
+    1. GenAI app-building playground powered by Amazon Bedrock
